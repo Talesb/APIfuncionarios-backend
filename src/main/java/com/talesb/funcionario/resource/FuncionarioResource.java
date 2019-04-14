@@ -23,5 +23,6 @@ public class FuncionarioResource {
 		return this.funcionarioService.findAll();
 	}
 	 
+	
 
 }
