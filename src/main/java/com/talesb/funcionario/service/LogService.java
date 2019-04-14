@@ -1,5 +1,6 @@
 package com.talesb.funcionario.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.talesb.funcionario.exception.LogNotFoundException;
 import com.talesb.funcionario.exception.UserNotFoundException;
 import com.talesb.funcionario.model.Funcionario;
 import com.talesb.funcionario.model.OperLog;
+import com.talesb.funcionario.model.TipoOperacao;
 import com.talesb.funcionario.repository.LogRepository;
 
 @Service
@@ -17,6 +19,9 @@ public class LogService {
 
 	@Autowired
 	private LogRepository logsRepository;
+
+	@Autowired
+	private FuncionarioService funcionarioService;
 
 	public List<OperLog> findAll() {
 		try {
@@ -67,10 +72,10 @@ public class LogService {
 		}
 	}
 
-	public OperLog findByFuncionario(Funcionario funcionario) {
+	public OperLog findByFuncionario(int funcionarioid) {
 		OperLog log;
 		try {
-			log = logsRepository.findByFuncionario(funcionario);
+			log = logsRepository.findByFuncionarioId(funcionarioid);
 
 		} catch (Exception e) {
 			throw new LogNotFoundException("Erro ao recuperar o log.");
@@ -79,16 +84,29 @@ public class LogService {
 		return log;
 	}
 
-	public OperLog findByFuncionario(int funcionarioid) {
-		OperLog log;
-		try {
-			log = logsRepository.findByFuncionarioID(funcionarioid);
+	public void GenerateLog(TipoOperacao operacao, int funcionarioid) {
+		Funcionario funcionario = funcionarioService.getById(funcionarioid);
+		this.GenerateLog(operacao, funcionario);
 
-		} catch (Exception e) {
-			throw new LogNotFoundException("Erro ao recuperar o log.");
+	}
+
+	public void GenerateLog(TipoOperacao operacao) {
+		this.GenerateLog(operacao, null);
+
+	}
+
+	public void GenerateLog(TipoOperacao operacao, Funcionario funcionario) {
+
+		OperLog log = new OperLog();
+		log.setDataEvento(new Date());
+		if (funcionario != null) {
+			log.setFuncionarioId(funcionario.getId());
 		}
 
-		return log;
+		log.setOperacao(operacao.getOperacao());
+
+		this.save(log);
+
 	}
 
 }

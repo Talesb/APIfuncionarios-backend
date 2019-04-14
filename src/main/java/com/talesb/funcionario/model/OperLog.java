@@ -25,10 +25,8 @@ public class OperLog extends Entidade {
 	@Column(name = "OPERACAO", nullable = false)
 	private String operacao;
 
-	@ManyToOne(optional = false)
-	@Fetch(FetchMode.JOIN)
-	@JoinColumn(name = "FUNCIONARIOID")
-	private Funcionario funcionario;
+	@Column(name = "FUNCIONARIOID", nullable = false)
+	private int funcionarioId;
 
 	public int getId() {
 		return id;
@@ -54,12 +52,14 @@ public class OperLog extends Entidade {
 		this.operacao = operacao;
 	}
 
-	public Funcionario getFuncionario() {
-		return funcionario;
+	public int getFuncionarioId() {
+		return funcionarioId;
 	}
 
-	public void setFuncionario(Funcionario funcionario) {
-		this.funcionario = funcionario;
+	public void setFuncionarioId(int funcionarioId) {
+		this.funcionarioId = funcionarioId;
 	}
+
+ 
 
 }

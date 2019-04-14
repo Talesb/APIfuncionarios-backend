@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.talesb.funcionario.exception.UserNotFoundException;
 import com.talesb.funcionario.model.Funcionario;
+import com.talesb.funcionario.model.TipoOperacao;
 import com.talesb.funcionario.service.FuncionarioService;
+import com.talesb.funcionario.service.LogService;
 
 @RestController
 @RequestMapping("/funcionario")
@@ -26,14 +29,19 @@ public class FuncionarioResource {
 	@Autowired
 	private FuncionarioService funcionarioService;
 
+	@Autowired
+	private LogService logService;
+
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Funcionario> findAll() {
+		logService.GenerateLog(TipoOperacao.GET);
 		return this.funcionarioService.findAll();
 	}
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> save(@RequestBody Funcionario funcionario) {
 		this.funcionarioService.save(funcionario);
+		logService.GenerateLog(TipoOperacao.POST, funcionario);
 		return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(funcionario.getId()).toUri()).build();
 
@@ -42,25 +50,34 @@ public class FuncionarioResource {
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Funcionario update(@PathVariable int id, @RequestBody Funcionario funcionario) {
 		Funcionario funcAux = this.funcionarioService.getById(id);
-		funcionario.setId(funcAux.getId());
+		if (funcAux != null) {
+			funcionario.setId(funcAux.getId());
+		} else {
+			throw new UserNotFoundException("Não é possível atualizar um funcionário inexistente");
+		}
+
 		this.funcionarioService.save(funcionario);
+		logService.GenerateLog(TipoOperacao.PUT, funcionario);
 		return funcionario;
 
 	}
 
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Funcionario getById(@PathVariable int id) {
+		logService.GenerateLog(TipoOperacao.GET, id);
 		return this.funcionarioService.getById(id);
 	}
 
 	@DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> delete(@RequestBody Funcionario funcionario) {
+		logService.GenerateLog(TipoOperacao.DELETE, funcionario);
 		this.funcionarioService.delete(funcionario);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> deleteById(@PathVariable int id) {
+		logService.GenerateLog(TipoOperacao.DELETE, id);
 		this.funcionarioService.deleteById(id);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}

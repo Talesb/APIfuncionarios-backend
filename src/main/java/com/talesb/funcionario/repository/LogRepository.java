@@ -12,15 +12,13 @@ import com.talesb.funcionario.model.OperLog;
 @Repository
 public interface LogRepository extends JpaRepository<OperLog, Integer> {
 
-	static final String FIND_BY_FUNCIONARIO_ID = "select operlog from OperLog operlog where operlog.funcionario.id = ?1";
+	static final String FIND_BY_FUNCIONARIO_ID = "select operlog from OperLog operlog where operlog.funcionarioid = ?1";
 
 	List<OperLog> findAll();
 
 	OperLog findById(int id);
 
-	OperLog findByFuncionario(Funcionario funcionario);
-
-	@Query(FIND_BY_FUNCIONARIO_ID)
-	OperLog findByFuncionarioID(int funcionarioid);
+ 
+	OperLog findByFuncionarioId(int id);
 
 }

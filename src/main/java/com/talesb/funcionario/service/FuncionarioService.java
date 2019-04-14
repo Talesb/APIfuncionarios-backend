@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.talesb.funcionario.exception.BusinessException;
 import com.talesb.funcionario.exception.UserNotFoundException;
 import com.talesb.funcionario.model.Funcionario;
+import com.talesb.funcionario.model.TipoOperacao;
 import com.talesb.funcionario.repository.FuncionarioRepository;
 
 @Service
