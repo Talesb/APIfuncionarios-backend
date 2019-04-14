@@ -14,7 +14,7 @@ import javax.persistence.Table;
 public class Funcionario extends Entidade {
 
 	private static final long serialVersionUID = 1L;
- 
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -58,6 +58,11 @@ public class Funcionario extends Entidade {
 
 	public void setCargo(String cargo) {
 		this.cargo = cargo;
+	}
+
+	public static boolean isFuncionarioValido(Funcionario funcionario) {
+		return funcionario != null && funcionario.getNome() != null && funcionario.getIdade() != 0
+				&& funcionario.getCargo() != null;
 	}
 
 }

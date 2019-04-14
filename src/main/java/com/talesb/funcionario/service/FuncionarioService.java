@@ -26,7 +26,7 @@ public class FuncionarioService {
 
 	public Funcionario save(Funcionario funcionario) {
 		try {
-			if (funcionario != null) {
+			if (Funcionario.isFuncionarioValido(funcionario)) {
 				funcionarioRepository.save(funcionario);
 			}
 		} catch (Exception e) {
@@ -47,7 +47,7 @@ public class FuncionarioService {
 
 	public void delete(Funcionario funcionario) {
 		try {
-			if (funcionario != null && funcionario.isPersistido()) {
+			if (Funcionario.isFuncionarioValido(funcionario) && funcionario.isPersistido()) {
 				funcionarioRepository.delete(funcionario);
 			}
 		} catch (Exception e) {
