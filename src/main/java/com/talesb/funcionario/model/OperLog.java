@@ -25,8 +25,8 @@ public class OperLog extends Entidade {
 	@Column(name = "OPERACAO", nullable = false)
 	private String operacao;
 
-	@Column(name = "FUNCIONARIOID", nullable = false)
-	private int funcionarioId;
+	@Column(name = "PATH", nullable = false)
+	private String path;
 
 	public int getId() {
 		return id;
@@ -52,14 +52,14 @@ public class OperLog extends Entidade {
 		this.operacao = operacao;
 	}
 
-	public int getFuncionarioId() {
-		return funcionarioId;
+	public String getPath() {
+		return path;
 	}
 
-	public void setFuncionarioId(int funcionarioId) {
-		this.funcionarioId = funcionarioId;
+	public void setPath(String path) {
+		this.path = path;
 	}
-
- 
+	
+	
 
 }

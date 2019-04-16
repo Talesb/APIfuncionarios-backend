@@ -12,5 +12,5 @@ create table OPER_LOG(
 	ID  int not null auto_increment PRIMARY KEY,
     DATAEVENTO date not null,
     OPERACAO varchar(50) not null,
-    FUNCIONARIOID int
-);
+    PATH varchar(100)
+)

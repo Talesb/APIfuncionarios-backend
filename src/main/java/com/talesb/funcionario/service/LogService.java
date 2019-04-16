@@ -20,9 +20,6 @@ public class LogService {
 	@Autowired
 	private LogRepository logsRepository;
 
-	@Autowired
-	private FuncionarioService funcionarioService;
-
 	public List<OperLog> findAll() {
 		try {
 			return this.logsRepository.findAll();
@@ -72,39 +69,18 @@ public class LogService {
 		}
 	}
 
-	public OperLog findByFuncionario(int funcionarioid) {
-		OperLog log;
-		try {
-			log = logsRepository.findByFuncionarioId(funcionarioid);
-
-		} catch (Exception e) {
-			throw new LogNotFoundException("Erro ao recuperar o log.");
-		}
-
-		return log;
-	}
-
-	public void GenerateLog(TipoOperacao operacao, int funcionarioid) {
-		Funcionario funcionario = funcionarioService.getById(funcionarioid);
-		this.GenerateLog(operacao, funcionario);
-
-	}
-
 	public void GenerateLog(TipoOperacao operacao) {
 		this.GenerateLog(operacao, null);
 
 	}
 
-	public void GenerateLog(TipoOperacao operacao, Funcionario funcionario) {
-
+	public void GenerateLog(TipoOperacao operacao, String path) {
 		OperLog log = new OperLog();
 		log.setDataEvento(new Date());
-		if (funcionario != null) {
-			log.setFuncionarioId(funcionario.getId());
+		if (path != null) {
+			log.setPath(path);
 		}
-
 		log.setOperacao(operacao.getOperacao());
-
 		this.save(log);
 
 	}

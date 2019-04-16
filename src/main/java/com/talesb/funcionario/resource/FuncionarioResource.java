@@ -26,6 +26,8 @@ import com.talesb.funcionario.service.LogService;
 @RequestMapping("/funcionario")
 public class FuncionarioResource {
 
+	private String PATH = "/funcionario";
+
 	@Autowired
 	private FuncionarioService funcionarioService;
 
@@ -34,14 +36,14 @@ public class FuncionarioResource {
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Funcionario> findAll() {
-		logService.GenerateLog(TipoOperacao.GET);
+		logService.GenerateLog(TipoOperacao.GET,PATH);
 		return this.funcionarioService.findAll();
 	}
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> save(@RequestBody Funcionario funcionario) {
+		logService.GenerateLog(TipoOperacao.POST, PATH);
 		this.funcionarioService.save(funcionario);
-		logService.GenerateLog(TipoOperacao.POST, funcionario);
 		return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(funcionario.getId()).toUri()).build();
 
@@ -49,6 +51,7 @@ public class FuncionarioResource {
 
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Funcionario update(@PathVariable int id, @RequestBody Funcionario funcionario) {
+		logService.GenerateLog(TipoOperacao.PUT, PATH.concat("/" + id));
 		Funcionario funcAux = this.funcionarioService.getById(id);
 		if (funcAux != null) {
 			funcionario.setId(funcAux.getId());
@@ -57,27 +60,27 @@ public class FuncionarioResource {
 		}
 
 		this.funcionarioService.save(funcionario);
-		logService.GenerateLog(TipoOperacao.PUT, funcionario);
+
 		return funcionario;
 
 	}
 
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Funcionario getById(@PathVariable int id) {
-		logService.GenerateLog(TipoOperacao.GET, id);
+		logService.GenerateLog(TipoOperacao.GET, PATH.concat("/" + id));
 		return this.funcionarioService.getById(id);
 	}
 
 	@DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> delete(@RequestBody Funcionario funcionario) {
-		logService.GenerateLog(TipoOperacao.DELETE, funcionario);
+		logService.GenerateLog(TipoOperacao.DELETE, PATH);
 		this.funcionarioService.delete(funcionario);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> deleteById(@PathVariable int id) {
-		logService.GenerateLog(TipoOperacao.DELETE, id);
+		logService.GenerateLog(TipoOperacao.DELETE, PATH.concat("/" + id));
 		this.funcionarioService.deleteById(id);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
